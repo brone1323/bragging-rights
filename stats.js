@@ -237,11 +237,23 @@
       html += '</div>';
       if (data.comparison && data.comparison.length) {
         html += '<h3 style="color:#3fa7ff;font-size:1rem;margin-top:1rem;">Season Stats</h3>';
-        html += '<table style="width:100%;border-collapse:collapse;margin-top:0.5rem;"><thead><tr style="color:#3fa7ff;"><th>Stat</th><th>' + (teamA.abbreviation || 'A') + '</th><th>' + (teamB.abbreviation || 'B') + '</th></tr></thead><tbody>';
+        var abbrA = teamA.abbreviation || 'A';
+        var abbrB = teamB.abbreviation || 'B';
         data.comparison.forEach(function(row) {
-          html += '<tr><td style="padding:0.3rem 0;">' + row.label + '</td><td>' + row.a + '</td><td>' + row.b + '</td></tr>';
+          var pctA = row.pct_a != null ? row.pct_a : 50;
+          var pctB = row.pct_b != null ? row.pct_b : 50;
+          var rankA = row.rank_a != null ? row.rank_a : 1;
+          var rankB = row.rank_b != null ? row.rank_b : 1;
+          html += '<div style="margin:0.5rem 0;"><div style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.2rem;">' + row.label + '</div>';
+          html += '<div style="display:flex;align-items:center;gap:0.5rem;">';
+          html += '<span style="min-width:3rem;display:flex;align-items:center;gap:0.25rem;">' + (rankA === 1 ? '<span style="color:#3fa7ff;font-weight:bold;">#1</span>' : '<span style="color:#6b7280;font-size:0.85rem;">#2</span>') + ' ' + row.a + '</span>';
+          html += '<div style="flex:1;height:10px;background:#18213a;border-radius:4px;overflow:hidden;display:flex;">';
+          html += '<div style="width:' + pctA + '%;background:#3fa7ff;min-width:2px;"></div>';
+          html += '<div style="width:' + pctB + '%;background:#1e2a4a;min-width:2px;"></div>';
+          html += '</div>';
+          html += '<span style="min-width:3rem;text-align:right;display:flex;align-items:center;gap:0.25rem;justify-content:flex-end;">' + row.b + ' ' + (rankB === 1 ? '<span style="color:#3fa7ff;font-weight:bold;">#1</span>' : '<span style="color:#6b7280;font-size:0.85rem;">#2</span>') + '</span>';
+          html += '</div></div>';
         });
-        html += '</tbody></table>';
       }
       if (data.game_comparison && data.game_comparison.length) {
         html += '<h3 style="color:#3fa7ff;font-size:1rem;margin-top:1.2rem;">Game Stats</h3>';

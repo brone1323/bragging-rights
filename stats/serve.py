@@ -221,8 +221,40 @@ def api_matchup(league_id: str, event_id: str):
                for cat in team_a.get("stat_categories", []) for s in cat.get("stats", [])}
     stats_b = {s["name"]: {"display": s.get("displayValue", ""), "label": s.get("shortDisplayName") or s.get("displayName", s["name"])}
                for cat in team_b.get("stat_categories", []) for s in cat.get("stats", [])}
+    LOWER_IS_BETTER = {"goalsagainst", "goalsagainstaverage", "losses", "overtimelosses", "faceoffslost", "penaltyminutes"}
+    def parse_num(v):
+        try:
+            s = str(v).replace(",", "")
+            return float("".join(c for c in s if c.isdigit() or c == ".") or "0")
+        except (ValueError, TypeError):
+            return 0
+    def parse_for_bar(v):
+        s = str(v).strip()
+        if ":" in s and "." not in s:
+            parts = s.split(":")
+            try:
+                return int(parts[0]) * 60 + int(parts[-1]) if len(parts) >= 2 else parse_num(v)
+            except (ValueError, TypeError):
+                return parse_num(v)
+        return parse_num(v)
     for name in sorted(stats_a.keys() & stats_b.keys()):
-        comparison.append({"label": stats_a[name]["label"], "a": stats_a[name]["display"], "b": stats_b[name]["display"]})
+        va, vb = stats_a[name]["display"], stats_b[name]["display"]
+        na_raw, nb_raw = parse_for_bar(va), parse_for_bar(vb)
+        lower_better = name.lower() in LOWER_IS_BETTER or "against" in name.lower() or "loss" in name.lower()
+        na, nb = na_raw, nb_raw
+        if lower_better and (na_raw > 0 or nb_raw > 0):
+            m = max(na_raw, nb_raw)
+            na, nb = m - na_raw, m - nb_raw
+        total = na + nb
+        pct_a = (na / total * 100) if total > 0 else 50
+        pct_b = (nb / total * 100) if total > 0 else 50
+        if lower_better:
+            rank_a = 1 if na_raw < nb_raw else (2 if na_raw > nb_raw else 1)
+            rank_b = 1 if nb_raw < na_raw else (2 if nb_raw > na_raw else 1)
+        else:
+            rank_a = 1 if na_raw > nb_raw else (2 if na_raw < nb_raw else 1)
+            rank_b = 1 if nb_raw > na_raw else (2 if nb_raw < na_raw else 1)
+        comparison.append({"label": stats_a[name]["label"], "a": va, "b": vb, "pct_a": round(pct_a, 1), "pct_b": round(pct_b, 1), "rank_a": rank_a, "rank_b": rank_b})
     game_comparison = []
     stat_map = {
         "fieldGoalsMade-fieldGoalsAttempted": ("FG", "fg"), "fieldGoalPct": ("FG %", "pct"),
