@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Allow Facebook and other crawlers to fetch OG images and poll pages
+Allow: /api/og-image
+Allow: /poll.html

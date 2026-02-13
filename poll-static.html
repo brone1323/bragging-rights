@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poll - Bragging Rights</title>
+  <meta property="og:title" content="Bragging Rights - Poll" />
+  <meta property="og:description" content="Vote on this poll at Bragging Rights!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <script>
+    (function() {
+      function escAttr(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+      }
+      var params = new URLSearchParams(location.search);
+      var q = params.get('question') || params.get('q');
+      var o = params.get('opts') || params.get('options') || '';
+      if (q) {
+        var titleEl = document.querySelector('meta[property="og:title"]');
+        var descEl = document.querySelector('meta[property="og:description"]');
+        if (titleEl) titleEl.setAttribute('content', escAttr(q) + ' • Bragging Rights');
+        if (descEl) {
+          var opts = o ? o.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [];
+          var desc = opts.length ? 'Options: ' + opts.map(escAttr).join(' • ') + ' — Vote at Bragging Rights!' : 'Vote at Bragging Rights!';
+          descEl.setAttribute('content', desc);
+        }
+        document.title = q + ' - Bragging Rights';
+      }
+      var urlEl = document.querySelector('meta[property="og:url"]');
+      if (urlEl) urlEl.setAttribute('content', location.href);
+      var imgEl = document.querySelector('meta[property="og:image"]');
+      if (imgEl && q) {
+        var base = (location.origin + (location.pathname ? location.pathname.replace(/\/[^/]*$/, '') : '')).replace(/\/$/, '');
+        var optsEnc = o ? encodeURIComponent(o) : '';
+        var imgUrl = base + '/api/og-image?question=' + encodeURIComponent(q) + (optsEnc ? '&opts=' + optsEnc : '');
+        imgEl.setAttribute('content', imgUrl);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="index.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">My Profile</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction: column; max-width: 600px;">
+    <section class="games-column">
+      <h2 id="poll-title">Poll</h2>
+      <div id="poll-content" class="poll-share-card">
+        <p class="note">Loading...</p>
+      </div>
+      <p style="margin-top:1.5rem;">
+        <a href="index.html" style="color:#3fa7ff;text-decoration:none;font-weight:bold;">← Vote at Bragging Rights</a>
+      </p>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script>
+    (function() {
+      function esc(s) {
+        if (!s) return '';
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+      var params = new URLSearchParams(location.search);
+      var q = params.get('question') || params.get('q');
+      var o = params.get('opts') || params.get('options') || '';
+      var titleEl = document.getElementById('poll-title');
+      var contentEl = document.getElementById('poll-content');
+      if (!q) {
+        titleEl.textContent = 'Poll';
+        contentEl.innerHTML = '<p class="note">No poll specified. <a href="index.html" style="color:#3fa7ff;">Go to Bragging Rights</a></p>';
+        return;
+      }
+      titleEl.textContent = q;
+      var opts = o ? o.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [];
+      var html = '<div class="poll-question" style="margin-bottom:1rem;">' + esc(q) + '</div>';
+      if (opts.length) {
+        html += '<div style="color:#b8c6e0;line-height:1.6;">';
+        opts.forEach(function(opt, i) {
+          html += '<div style="margin:0.4rem 0;">' + (i + 1) + '. ' + esc(opt) + '</div>';
+        });
+        html += '</div>';
+      }
+      html += '<p style="margin-top:1.2rem;color:#3fa7ff;font-weight:bold;">Vote at Bragging Rights!</p>';
+      contentEl.innerHTML = html;
+    })();
+  </script>
+</body>
+</html>
