@@ -159,11 +159,12 @@
     });
   }
 
-  function findMatchingEvent(leagueId, teamA, teamB) {
-    return fetchScoreboard(leagueId).then(function(data) {
-      var events = (data && data.events) || [];
+  function findMatchingEvent(leagueId, teamA, teamB, dateStr) {
+    function searchInEvents(events) {
       var a = (teamA || '').toLowerCase().replace(/\s+/g, ' ');
       var b = (teamB || '').toLowerCase().replace(/\s+/g, ' ');
+      var aParts = a.split(' ').filter(Boolean);
+      var bParts = b.split(' ').filter(Boolean);
       for (var i = 0; i < events.length; i++) {
         var comp = (events[i].competitions || [])[0] || {};
         var competitors = comp.competitors || [];
@@ -171,12 +172,43 @@
           var t = c.team || {};
           return (t.displayName || t.location + ' ' + t.name || '').toLowerCase();
         }).filter(Boolean);
-        var matchA = names.some(function(n) { return n.indexOf(a) >= 0 || a.indexOf(n) >= 0; });
-        var matchB = names.some(function(n) { return n.indexOf(b) >= 0 || b.indexOf(n) >= 0; });
+        var matchA = names.some(function(n) {
+          if (n.indexOf(a) >= 0 || a.indexOf(n) >= 0) return true;
+          return aParts.some(function(p) { return p.length > 2 && n.indexOf(p) >= 0; });
+        });
+        var matchB = names.some(function(n) {
+          if (n.indexOf(b) >= 0 || b.indexOf(n) >= 0) return true;
+          return bParts.some(function(p) { return p.length > 2 && n.indexOf(p) >= 0; });
+        });
         if (matchA && matchB) return { eventId: events[i].id, leagueId: leagueId };
       }
       return null;
-    });
+    }
+    function tryDate(dStr) {
+      return fetchScoreboard(leagueId, dStr).then(function(data) {
+        var events = (data && data.events) || [];
+        return searchInEvents(events);
+      });
+    }
+    var datesToTry = [];
+    if (dateStr) datesToTry.push(dateStr);
+    var today = new Date();
+    var todayStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+    if (datesToTry.indexOf(todayStr) < 0) datesToTry.push(todayStr);
+    for (var d = 1; d <= 3; d++) {
+      var fut = new Date(today);
+      fut.setDate(fut.getDate() + d);
+      var fs = fut.getFullYear() + String(fut.getMonth() + 1).padStart(2, '0') + String(fut.getDate()).padStart(2, '0');
+      if (datesToTry.indexOf(fs) < 0) datesToTry.push(fs);
+    }
+    function tryNext(i) {
+      if (i >= datesToTry.length) return Promise.resolve(null);
+      return tryDate(datesToTry[i]).then(function(match) {
+        if (match) return match;
+        return tryNext(i + 1);
+      });
+    }
+    return tryNext(0);
   }
 
   function showMatchupModal(leagueId, eventId) {

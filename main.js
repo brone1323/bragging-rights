@@ -214,7 +214,8 @@ function renderGames(games) {
       const time = game.commence_time ? new Date(game.commence_time).toLocaleString() : (game.time || '');
       const teamParts = teams.split(' vs. ');
       const sportKey = game.sport_key || 'basketball_nba';
-      lastGames.push({ teams, odds, time, sportKey, home_team: game.home_team || teamParts[0], away_team: game.away_team || teamParts[1] });
+      const gameDate = game.commence_time ? new Date(game.commence_time) : null;
+      lastGames.push({ teams, odds, time, sportKey, home_team: game.home_team || teamParts[0], away_team: game.away_team || teamParts[1], gameDate });
       const div = document.createElement('div');
       div.className = 'game-card';
       div.innerHTML = `
@@ -233,7 +234,7 @@ function renderGames(games) {
   } else {
     sampleGames.forEach((game, idx) => {
       const teamParts = game.teams.split(' vs. ');
-      lastGames.push({ teams: game.teams, odds: game.odds, time: game.time, sportKey: 'basketball_nba', home_team: teamParts[0], away_team: teamParts[1] });
+      lastGames.push({ teams: game.teams, odds: game.odds, time: game.time, sportKey: 'basketball_nba', home_team: teamParts[0], away_team: teamParts[1], gameDate: null });
       const div = document.createElement('div');
       div.className = 'game-card';
       div.innerHTML = `
@@ -284,27 +285,12 @@ function renderGames(games) {
       const game = lastGames[idx];
       if (!game || !window.bragStats) return;
       const leagueId = window.bragStats.oddsToLeague(game.sportKey);
-      window.bragStats.findMatchingEvent(leagueId, game.home_team, game.away_team).then(function(match) {
+      const dateStr = game.gameDate ? (game.gameDate.getFullYear() + String(game.gameDate.getMonth() + 1).padStart(2, '0') + String(game.gameDate.getDate()).padStart(2, '0')) : null;
+      window.bragStats.findMatchingEvent(leagueId, game.home_team, game.away_team, dateStr).then(function(match) {
         if (match) {
           window.bragStats.showMatchupModal(match.leagueId, match.eventId);
         } else {
-          alert('No matching game found in scoreboard. The stats server may need to harvest today\'s games.');
-        }
-      });
-    };
-  });
-  // Bind Stats buttons
-  document.querySelectorAll('.game-card button[data-stats]').forEach(btn => {
-    btn.onclick = function() {
-      const idx = +btn.getAttribute('data-game');
-      const game = lastGames[idx];
-      if (!game || !window.bragStats) return;
-      const leagueId = window.bragStats.oddsToLeague(game.sportKey);
-      window.bragStats.findMatchingEvent(leagueId, game.home_team, game.away_team).then(function(match) {
-        if (match) {
-          window.bragStats.showMatchupModal(match.leagueId, match.eventId);
-        } else {
-          alert('No matching game found in scoreboard. The stats server may need to harvest today\'s games.');
+          alert('No matching game found in scoreboard. Try checking the Leagues page for this matchup, or the game may not be in the stats yet.');
         }
       });
     };
