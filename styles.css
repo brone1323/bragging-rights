@@ -1,0 +1,528 @@
+body {
+  background: #101624;
+  color: #e6e9f0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #162040;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #1e2a4a;
+}
+.hero-left {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  width: 48px;
+  height: 48px;
+  margin-right: 1rem;
+}
+.site-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3fa7ff;
+  letter-spacing: 2px;
+}
+.hero-nav a, .hero-nav button {
+  color: #e6e9f0;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  margin-left: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.hero-nav a:hover, .hero-nav button:hover {
+  color: #3fa7ff;
+}
+.main-content {
+  display: flex;
+  max-width: 1400px;
+  margin: 2rem auto;
+  gap: 2rem;
+}
+.main-content-three-col {
+  max-width: 1600px;
+}
+.scoreboard-column {
+  background: #18213a;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  flex: 0 0 260px;
+  min-width: 220px;
+  box-shadow: 0 2px 12px #0002;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.scoreboard-column h2 {
+  color: #3fa7ff;
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+.scoreboard-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scoreboard-game {
+  background: #222c4a;
+  border-radius: 6px;
+  padding: 0.6rem 0.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+.scoreboard-game .sb-status {
+  font-size: 0.75rem;
+  color: #b8c6e0;
+  margin-bottom: 0.3rem;
+}
+.scoreboard-game .sb-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+.scoreboard-game .sb-team {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scoreboard-game .sb-score {
+  font-weight: bold;
+  color: #3fa7ff;
+  flex-shrink: 0;
+}
+.games-column, .polls-column {
+  background: #18213a;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  flex: 1;
+  min-width: 320px;
+  box-shadow: 0 2px 12px #0002;
+}
+.games-column h2, .polls-column h2 {
+  color: #3fa7ff;
+  margin-top: 0;
+}
+#games-list, #polls-list {
+  margin-top: 1rem;
+}
+.game-card, .poll-card {
+  background: #222c4a;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 1px 6px #0001;
+}
+.game-card .teams {
+  font-weight: bold;
+  color: #e6e9f0;
+}
+.game-card .odds {
+  color: #3fa7ff;
+  margin: 0.5rem 0;
+}
+.game-card button {
+  background: #3fa7ff;
+  color: #101624;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+.game-card button:hover {
+  background: #1e8be6;
+}
+.game-card .stats-btn {
+  background: #3b5998 !important;
+  color: #fff !important;
+}
+.game-card .stats-btn:hover {
+  background: #29487d !important;
+}
+.poll-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background: #222c4a;
+  border-radius: 10px;
+  padding: 1.2rem 1.2rem 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px #0002;
+}
+.poll-card .poll-question {
+  font-weight: bold;
+  font-size: 1.13rem;
+  margin-bottom: 0.5rem;
+  color: #3fa7ff;
+}
+.poll-card .poll-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.poll-card button {
+  background: #3fa7ff;
+  color: #101624;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  margin-right: 0.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+.poll-card button.selected, .poll-card button:hover {
+  background: #1e8be6;
+}
+.poll-card .comments {
+  margin-top: 0.7rem;
+  background: #1a223a;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+.poll-card .comment {
+  font-size: 0.97rem;
+  margin-bottom: 0.3rem;
+  color: #b8c6e0;
+}
+.poll-card .add-comment {
+  display: flex;
+  margin-top: 0.5rem;
+}
+.poll-card .add-comment input {
+  flex: 1;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  padding: 0.3rem 0.7rem;
+  background: #222c4a;
+  color: #e6e9f0;
+}
+.poll-card .add-comment button {
+  border-radius: 0 4px 4px 0;
+  padding: 0.3rem 0.8rem;
+}
+.poll-share-btn {
+  background: #3b5998 !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s;
+}
+.poll-share-btn:hover {
+  background: #29487d !important;
+}
+.poll-share-card {
+  background: #222c4a;
+  border-radius: 8px;
+  padding: 1.2rem;
+  min-height: 80px;
+}
+.leagues-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+.league-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background: #222c4a;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #e6e9f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.league-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(63,167,255,0.2);
+}
+.league-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.8rem;
+}
+.league-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3fa7ff;
+}
+.league-desc {
+  font-size: 0.9rem;
+  color: #b8c6e0;
+  margin-top: 0.3rem;
+}
+.league-tab {
+  background: #18213a;
+  color: #e6e9f0;
+  border: 1px solid #1e2a4a;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.league-tab:hover, .league-tab.active {
+  background: #3fa7ff;
+  color: #101624;
+  border-color: #3fa7ff;
+}
+.teams-grid-league {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+.team-card-league {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: #222c4a;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #e6e9f0;
+  transition: background 0.2s;
+}
+.team-card-league:hover {
+  background: #2a3555;
+}
+.team-logo-league img, .team-logo-league .logo-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+.team-logo-league .logo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #18213a;
+  color: #3fa7ff;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.team-name-league {
+  font-weight: bold;
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.team-abbr-league {
+  font-size: 0.85rem;
+  color: #b8c6e0;
+}
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+.standings-table th, .standings-table td {
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #1e2a4a;
+}
+.standings-table th {
+  color: #3fa7ff;
+}
+.schedule-list, .scoreboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.schedule-item, .scoreboard-item-league {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  background: #222c4a;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #e6e9f0;
+  transition: background 0.2s;
+}
+.schedule-item:hover, .scoreboard-item-league:hover {
+  background: #2a3555;
+}
+.schedule-date {
+  min-width: 120px;
+  color: #b8c6e0;
+}
+.sb-scores {
+  font-weight: bold;
+  color: #3fa7ff;
+  margin: 0 0.5rem;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #101624cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay.hidden {
+  display: none;
+}
+.modal {
+  background: #222c4a;
+  border-radius: 10px;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  min-width: 340px;
+  position: relative;
+  box-shadow: 0 4px 32px #0006;
+}
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #e6e9f0;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+#auth-tabs {
+  display: flex;
+  margin-bottom: 1rem;
+}
+#auth-tabs button {
+  flex: 1;
+  background: #18213a;
+  color: #e6e9f0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.7rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: border 0.2s, color 0.2s;
+}
+#auth-tabs button.active {
+  color: #3fa7ff;
+  border-bottom: 2px solid #3fa7ff;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: #b8c6e0;
+}
+.auth-form input, .auth-form textarea {
+  background: #18213a;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.8rem;
+  color: #e6e9f0;
+  margin-top: 0.2rem;
+}
+.auth-form button {
+  background: #3fa7ff;
+  color: #101624;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.auth-form button:hover {
+  background: #1e8be6;
+}
+.admin-link {
+  margin-top: 0.7rem;
+  color: #3fa7ff;
+  cursor: pointer;
+  font-size: 0.97rem;
+  text-align: right;
+}
+.note {
+  color: #b8c6e0;
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+}
+#fb-signin-btn {
+  background: #3b5998 !important;
+  color: #fff !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  transition: background 0.2s;
+}
+#fb-signin-btn:hover {
+  background: #29487d !important;
+}
+.site-footer {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid #1e2a4a;
+  color: #b8c6e0;
+  font-size: 0.95rem;
+}
+.site-footer a {
+  color: #3fa7ff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.site-footer a:hover {
+  color: #e6e9f0;
+}
+.footer-sep {
+  margin: 0 0.8rem;
+  color: #1e2a4a;
+}
+@media (max-width: 1100px) {
+  .main-content-three-col {
+    flex-wrap: wrap;
+  }
+  .scoreboard-column {
+    flex: 1 1 100%;
+    max-height: 250px;
+  }
+}
+@media (max-width: 900px) {
+  .main-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .scoreboard-column {
+    order: -1;
+  }
+}

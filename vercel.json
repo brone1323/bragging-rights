@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/og-image.tsx": {
+      "runtime": "@vercel/og@0.6.0"
+    }
+  }
+}

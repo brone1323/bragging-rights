@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard - Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">My Profile</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction: column; max-width: 700px;">
+    <section class="games-column">
+      <h2>Leaderboard</h2>
+      <table id="leaderboard-table" style="width:100%;margin-top:1.2rem;">
+        <thead>
+          <tr style="color:#3fa7ff;">
+            <th>#</th>
+            <th>Username</th>
+            <th>Balance</th>
+            <th>Wagers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Leaderboard rows -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="leaderboard.js"></script>
+</body>
+</html>

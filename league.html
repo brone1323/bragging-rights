@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">League - Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="index.html">Home</a>
+      <a href="leagues.html">Leagues</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">My Profile</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction: column; max-width: 1000px;">
+    <section class="games-column">
+      <h2 id="league-title">League</h2>
+      <div class="league-tabs" style="margin-bottom:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="league-tab active" data-tab="teams">Teams</button>
+        <button class="league-tab" data-tab="standings">Standings</button>
+        <button class="league-tab" data-tab="schedule">Schedule</button>
+        <button class="league-tab" data-tab="scoreboard">Scoreboard</button>
+      </div>
+      <div id="league-content">
+        <div class="note">Loading...</div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="league.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leagues - Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="index.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">My Profile</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction: column; max-width: 900px;">
+    <section class="games-column">
+      <h2>Leagues</h2>
+      <p class="note">Browse teams, standings, schedules, and player stats from the four major leagues.</p>
+      <div id="leagues-grid" class="leagues-grid">
+        <a href="league.html?league=nba" class="league-card">
+          <span class="league-logo" style="background:url('https://a.espncdn.com/i/teamlogos/leagues/500/nba.png') center/contain no-repeat;"></span>
+          <span class="league-name">NBA</span>
+          <span class="league-desc">Basketball</span>
+        </a>
+        <a href="league.html?league=nfl" class="league-card">
+          <span class="league-logo" style="background:url('https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png') center/contain no-repeat;"></span>
+          <span class="league-name">NFL</span>
+          <span class="league-desc">Football</span>
+        </a>
+        <a href="league.html?league=nhl" class="league-card">
+          <span class="league-logo" style="background:url('https://a.espncdn.com/i/teamlogos/leagues/500/nhl.png') center/contain no-repeat;"></span>
+          <span class="league-name">NHL</span>
+          <span class="league-desc">Hockey</span>
+        </a>
+        <a href="league.html?league=mlb" class="league-card">
+          <span class="league-logo" style="background:url('https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png') center/contain no-repeat;"></span>
+          <span class="league-name">MLB</span>
+          <span class="league-desc">Baseball</span>
+        </a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="leagues.js"></script>
+</body>
+</html>

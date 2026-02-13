@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav" id="hero-nav">
+      <a href="leagues.html">Leagues</a>
+      <a href="#leaderboard" id="leaderboard-link">Leaderboard</a>
+      <button id="invite-btn">Invite a Friend</button>
+      <button id="login-btn">Login / Sign Up</button>
+    </nav>
+  </header>
+  <main class="main-content main-content-three-col">
+    <section class="scoreboard-column">
+      <h2>Live Scores</h2>
+      <div id="scoreboard-list" class="scoreboard-scroll">
+        <div class="note" id="scoreboard-note">Loading scores...</div>
+      </div>
+    </section>
+    <section class="games-column">
+      <h2>Games to Bet On</h2>
+      <div class="note" style="margin-bottom:1rem;color:#3fa7ff;font-weight:bold;" id="games-note">Login to bet for bragging rights</div>
+      <div id="games-list">
+        <!-- Games and odds will be loaded here -->
+      </div>
+      <div class="note" style="margin-top:1rem;font-size:0.97rem;color:#b8c6e0;">* All match times shown in <b>Eastern Standard Time (EST)</b>. Parlay betting is available.</div>
+    </section>
+    <section class="polls-column">
+      <h2>Polls</h2>
+      <div id="polls-list">
+        <!-- Polls will be loaded here -->
+      </div>
+    </section>
+  </main>
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal" id="auth-modal">
+      <button class="close-modal" id="close-modal">&times;</button>
+      <div id="auth-tabs">
+        <button id="tab-login" class="active">Login</button>
+        <button id="tab-signup">Sign Up</button>
+      </div>
+      <form id="login-form" class="auth-form">
+        <label>Username:<input type="text" name="username" required autocomplete="username" /></label>
+        <label>Password:<input type="password" name="password" required autocomplete="current-password" /></label>
+        <button type="submit">Login</button>
+      </form>
+      <form id="signup-form" class="auth-form" style="display:none;">
+        <label>Username:<input type="text" name="username" required autocomplete="username" /></label>
+        <label>Password:<input type="password" name="password" required autocomplete="new-password" /></label>
+        <label>Email:<input type="email" name="email" required autocomplete="email" /></label>
+        <button type="submit">Sign Up</button>
+        <div id="signup-status" style="margin-top:0.7rem;color:#3fa7ff;"></div>
+      </form>
+    </div>
+  </div>
+  <div id="invite-modal" class="modal-overlay hidden">
+    <div class="modal" style="min-width:340px;">
+      <button class="close-modal" id="close-invite">&times;</button>
+      <h2 style="color:#3fa7ff;margin-top:0;">Invite a Friend</h2>
+      <form id="invite-form" class="auth-form">
+        <label>Friend's Email:<input type="email" name="friend_email" required autocomplete="off" /></label>
+        <label>Message:<textarea name="invite_message" rows="3" style="background:#18213a;color:#e6e9f0;border-radius:4px;padding:0.5rem;"></textarea></label>
+        <button type="submit">Send Invite</button>
+      </form>
+      <div id="invite-status" style="margin-top:0.7rem;color:#3fa7ff;"></div>
+    </div>
+  </div>
+  <div id="stats-modal" class="modal-overlay hidden">
+    <div class="modal" style="min-width:500px;max-width:90vw;max-height:90vh;overflow:auto;">
+      <button class="close-modal" id="close-stats">&times;</button>
+      <h2 style="color:#3fa7ff;margin-top:0;">Team Comparison</h2>
+      <div id="stats-modal-content"></div>
+    </div>
+  </div>
+  <div id="parlay-modal" class="modal-overlay hidden">
+    <div class="modal" style="min-width:340px;">
+      <button class="close-modal" id="close-parlay">&times;</button>
+      <h2 style="color:#3fa7ff;margin-top:0;">Parlay Bets</h2>
+      <div id="parlay-list"></div>
+      <form id="parlay-form" class="auth-form" style="margin-top:1rem;">
+        <label>Wager Amount:<input type="number" name="parlay_amount" min="1" required /></label>
+        <button type="submit">Place Parlay Bet</button>
+      </form>
+      <div id="parlay-status" style="margin-top:0.7rem;color:#3fa7ff;"></div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="stats.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

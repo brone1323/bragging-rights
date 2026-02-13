@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction: column; max-width: 600px;">
+    <section class="games-column" style="margin-bottom:2rem;">
+      <h2>My Profile</h2>
+      <div id="profile-summary">
+        <!-- User info will be loaded here -->
+      </div>
+    </section>
+    <section class="polls-column">
+      <h2>Recent Wagers</h2>
+      <div id="recent-wagers">
+        <!-- Recent wagers will be loaded here -->
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

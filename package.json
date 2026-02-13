@@ -1,0 +1,9 @@
+{
+  "name": "bragging-rights",
+  "version": "1.0.0",
+  "description": "Bragging Rights - Sports betting polls and wagers",
+  "type": "module",
+  "dependencies": {
+    "@vercel/og": "^0.6.0"
+  }
+}

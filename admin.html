@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Bragging Rights</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <img src="logo.svg" alt="Bragging Rights Logo" class="logo" />
+      <span class="site-title">Bragging Rights</span>
+    </div>
+    <nav class="hero-nav">
+      <a href="index.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </nav>
+  </header>
+  <main class="main-content" style="flex-direction:column;max-width:700px;">
+    <section class="games-column">
+      <h2>Admin Panel</h2>
+      <form id="site-url-form" class="auth-form">
+        <label>Site URL (for Facebook sharing):
+          <input type="url" id="site-url" placeholder="https://yoursite.com" />
+        </label>
+        <button type="submit">Save Site URL</button>
+        <div class="note">Enter your public site URL (e.g. https://yoursite.com). Required for Facebook sharing—Facebook cannot reach localhost or file:// URLs. When deployed, the current page URL is used automatically.</div>
+      </form>
+      <form id="stats-api-form" class="auth-form">
+        <label>Stats API URL (for scoreboard and matchup):
+          <input type="url" id="stats-api-url" placeholder="http://localhost:5000" />
+        </label>
+        <button type="submit">Save Stats API</button>
+        <div class="note">Run the stats server (python serve.py in the stats folder). Enter its URL for live scoreboard and team stats. Or leave empty to try ./data/ if you've copied stats data.</div>
+      </form>
+      <form id="odds-api-form" class="auth-form">
+        <label>Sports Odds API Key:
+          <input type="text" id="odds-api-key" placeholder="Enter API Key" />
+        </label>
+        <button type="submit">Save API Key</button>
+      </form>
+      <form id="fb-link-form" class="auth-form">
+        <label>Facebook App ID:
+          <input type="text" id="fb-app-id" placeholder="Enter your Facebook App ID from developers.facebook.com" />
+        </label>
+        <label>Facebook Page Address:
+          <input type="url" id="fb-link" placeholder="https://facebook.com/yourpage" />
+        </label>
+        <button type="submit">Save Facebook Settings</button>
+        <div style="margin-top:0.5rem;">
+          <button id="fb-signin-btn">Sign in with Facebook</button>
+          <span id="fb-signin-status" style="margin-left:0.7rem;font-size:0.97rem;color:#3fa7ff;"></span>
+        </div>
+        <div class="note">Create an app at developers.facebook.com and add your site domain to "App Domains" and "Valid OAuth Redirect URIs". Then enter the App ID above, save, and click Sign in.</div>
+      </form>
+      <form id="poll-writer-form" class="auth-form">
+        <label>Write New Poll:
+          <input type="text" id="poll-question" placeholder="Poll question..." />
+        </label>
+        <label>Options (comma separated):
+          <input type="text" id="poll-options" placeholder="Option1, Option2" />
+        </label>
+        <label>Schedule (optional):
+          <input type="datetime-local" id="poll-schedule" />
+        </label>
+        <button type="submit">Add Poll</button>
+      </form>
+      <div id="admin-status" style="margin-top:1rem;color:#3fa7ff;"></div>
+    </section>
+    <section class="polls-column" style="margin-top:2rem;">
+      <h2>All Polls</h2>
+      <div style="margin-bottom:1rem;">
+        <label for="admin-impersonate-user">Interact as: </label>
+        <select id="admin-impersonate-user"></select>
+      </div>
+      <div id="admin-polls-list"></div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="footer-sep">|</span>
+    <a href="terms.html">Terms and Conditions</a>
+  </footer>
+  <script src="users.js"></script>
+  <script src="admin_ext.js"></script>
+</body>
+</html>
