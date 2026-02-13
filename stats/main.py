@@ -44,8 +44,18 @@ def run_harvest(
     harvester = ESPNHarvester(data_dir=output)
     storage = StatsStorage(data_dir=output)
     date = datetime.now()
-    season = date.year
     total_saved = 0
+
+    def get_season_year(league_id: str) -> int:
+        """ESPN uses season start year. NBA/NHL start Oct, NFL Sep, MLB Apr."""
+        y, m = date.year, date.month
+        if league_id in ("nba", "nhl"):
+            return y if m >= 10 else y - 1  # Season starts Oct
+        if league_id == "nfl":
+            return y if m >= 9 else y - 1  # Season starts Sep
+        if league_id == "mlb":
+            return y if m >= 4 else y - 1  # Season starts Apr
+        return y
 
     for league_id in leagues:
         if "teams" in types:
@@ -55,12 +65,14 @@ def run_harvest(
                 total_saved += 1
 
         if "standings" in types:
+            season = get_season_year(league_id)
             data = harvester.harvest_standings(league_id, season)
             if data:
                 storage.save_json(league_id, "standings", data)
                 total_saved += 1
 
         if "schedule" in types:
+            season = get_season_year(league_id)
             data = harvester.harvest_schedule(league_id, season)
             if data:
                 storage.save_json(league_id, "schedule", data)
