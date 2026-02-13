@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Matchup{% endblock %}
+{% block content %}
+
+<section class="matchup-header">
+  <h1>Team Stats Comparison</h1>
+  <p class="season-note">Season {{ season }} • <a href="/{{ league_id }}/scoreboard">← Scoreboard</a></p>
+</section>
+
+<div class="matchup-teams">
+  <div class="matchup-team team-a">
+    <a href="/{{ league_id }}/team/{{ team_a.team.id }}">
+      {% if team_a.team.get('logos') %}
+      <img src="{{ team_a.team.logos[0].href }}" alt="{{ team_a.team.displayName }}" class="matchup-logo">
+      {% elif team_a.team.get('logo') %}
+      <img src="{{ team_a.team.logo }}" alt="{{ team_a.team.displayName }}" class="matchup-logo">
+      {% endif %}
+      <h2>{{ team_a.team.get('displayName', '—') }}</h2>
+      {% if team_a.standing_summary %}<p class="matchup-standing">{{ team_a.standing_summary }}</p>{% endif %}
+    </a>
+  </div>
+  <div class="matchup-vs">vs</div>
+  <div class="matchup-team team-b">
+    <a href="/{{ league_id }}/team/{{ team_b.team.id }}">
+      {% if team_b.team.get('logos') %}
+      <img src="{{ team_b.team.logos[0].href }}" alt="{{ team_b.team.displayName }}" class="matchup-logo">
+      {% elif team_b.team.get('logo') %}
+      <img src="{{ team_b.team.logo }}" alt="{{ team_b.team.displayName }}" class="matchup-logo">
+      {% endif %}
+      <h2>{{ team_b.team.get('displayName', '—') }}</h2>
+      {% if team_b.standing_summary %}<p class="matchup-standing">{{ team_b.standing_summary }}</p>{% endif %}
+    </a>
+  </div>
+</div>
+
+{% if game_info %}
+<div class="matchup-venue">
+  {{ game_info.venue.fullName }}{% if game_info.venue.address %}, {{ game_info.venue.address.city }}{% endif %}
+</div>
+{% endif %}
+
+<section class="stats-comparison season-stats">
+  <h2>Before: Season Stats &amp; Rankings</h2>
+  <p class="section-desc">Season averages and division/conference standings before tip-off</p>
+  {% if comparison %}
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Stat</th>
+        <th>{{ team_a.team.get('abbreviation', 'A') }}</th>
+        <th>{{ team_b.team.get('abbreviation', 'B') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in comparison %}
+      <tr>
+        <td>{{ row.label }}</td>
+        <td>{{ row.a }}</td>
+        <td>{{ row.b }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">No comparable season stats available.</p>
+  {% endif %}
+</section>
+
+{% if game_comparison %}
+<section class="stats-comparison game-stats">
+  <h2>During/After: Game Performance</h2>
+  <p class="section-desc">Head-to-head stats from this game with visual comparison</p>
+  <div class="bar-comparison-list">
+    {% for row in game_comparison %}
+    <div class="bar-comparison-row">
+      <div class="bar-stat-label">{{ row.label }}</div>
+      <div class="bar-values">
+        <span class="bar-value-a">{{ row.a }}</span>
+        <div class="bar-track">
+          <div class="bar-segment bar-a" style="width: {{ row.pct_a }}%"></div>
+          <div class="bar-segment bar-b" style="width: {{ row.pct_b }}%"></div>
+        </div>
+        <span class="bar-value-b">{{ row.b }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<p class="back-link"><a href="/{{ league_id }}/scoreboard">← Back to Scoreboard</a></p>
+
+{% endblock %}

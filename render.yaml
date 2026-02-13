@@ -1,0 +1,9 @@
+# Render config: use the stats/ subfolder for the Python stats server
+# The Bragging Rights frontend is on Vercel - this service is stats API only
+services:
+  - type: web
+    name: bragging-rights-stats
+    runtime: python
+    rootDir: stats
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn serve:app --bind 0.0.0.0:$PORT --workers 1

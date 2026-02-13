@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ league_name }} Schedule{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>{{ league_name }} Schedule</h1>
+  <p>{{ events|length }} games</p>
+</section>
+
+{% if events %}
+<div class="schedule-list">
+  {% for event in events %}
+  {% set comp = event.competitions[0] if event.get('competitions') else {} %}
+  {% set competitors = comp.get('competitors', []) %}
+  {% set status = event.get('status', comp.get('status', {})) %}
+  <article class="schedule-item">
+    <div class="schedule-date">{{ event.date[:10] if event.date else '-' }}</div>
+    <div class="schedule-matchup">
+      {% for c in competitors %}
+      <span class="matchup-team">{{ c.team.displayName }} {{ '(H)' if c.homeAway == 'home' else '(A)' }}</span>
+      {% if not loop.last %} @ {% endif %}
+      {% endfor %}
+    </div>
+    <div class="schedule-status">{{ status.get('type', {}).get('shortDetail', '') }}</div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No schedule data. Run <code>python main.py --types schedule --leagues {{ league_id }}</code> to harvest.</p>
+</div>
+{% endif %}
+
+{% endblock %}

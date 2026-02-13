@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ league_name }} Scoreboard{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>{{ league_name }} Scoreboard</h1>
+  {% if day.date %}
+  <p>{{ day.date }}</p>
+  {% endif %}
+</section>
+
+{% if events %}
+<div class="scoreboard">
+  {% for event in events %}
+  {% set comp = event.competitions[0] if event.get('competitions') else {} %}
+  {% set competitors = (comp.get('competitors', [])|sort(attribute='homeAway')|list) or [] %}
+  {% set status = event.get('status', comp.get('status', {})) %}
+  {% set status_type = status.get('type', {}) %}
+  <a href="/{{ league_id }}/matchup/{{ event.id }}" class="game-card game-card-link">
+    <div class="game-status">
+      {{ status_type.get('shortDetail', status_type.get('detail', 'Scheduled')) }}
+    </div>
+    <div class="game-matchup">
+      {% for c in competitors %}
+      <div class="competitor {% if c.homeAway == 'home' %}home{% endif %}">
+        <img src="{{ c.team.logo }}" alt="" class="team-logo-sm" onerror="this.style.display='none'">
+        <div class="competitor-info">
+          <span class="team-name">{{ c.team.displayName }}</span>
+          <span class="team-abbr">{{ c.team.abbreviation }}</span>
+        </div>
+        <span class="score">{{ c.score or '-' }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if comp.get('venue') %}
+    <div class="game-venue">{{ comp.venue.fullName }}, {{ comp.venue.address.city }}</div>
+    {% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No games today. Run <code>python main.py --leagues {{ league_id }}</code> to harvest.</p>
+</div>
+{% endif %}
+
+{% endblock %}

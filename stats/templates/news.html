@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}News{% endblock %}
+{% block content %}
+
+<section class="news-header">
+  <h1>{{ league_name }} News</h1>
+  <p class="news-desc">Fully rewritten articles. Run <code>python main.py --types news</code> with <code>OPENAI_API_KEY</code> set to harvest.</p>
+</section>
+
+{% if items %}
+<ul class="news-list">
+  {% for item in items %}
+  <li class="news-item">
+    <h2 class="news-title">
+      {% if item.rewritten_title %}{{ item.rewritten_title }}{% else %}{{ item.title }}{% endif %}
+    </h2>
+    <div class="news-body">
+      {% if item.rewritten_body %}
+      <div class="news-article">{{ item.rewritten_body }}</div>
+      {% elif item.rewritten_summary %}
+      <p class="news-para">{{ item.rewritten_summary }}</p>
+      {% else %}
+      <p class="news-para">{{ item.summary }}</p>
+      {% endif %}
+    </div>
+    <div class="news-meta">
+      {% if item.published %}<time>{{ item.published[:10] }}</time>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No news yet. Set <code>OPENAI_API_KEY</code> and run <code>python main.py --types news --leagues {{ league_id }}</code> to fetch and rewrite.</p>
+{% endif %}
+
+{% endblock %}

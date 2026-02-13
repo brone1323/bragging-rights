@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ player_info.displayName }}{% endblock %}
+{% block content %}
+
+<section class="player-header">
+  <div class="player-header-main">
+    {% if player_info.get('headshot', {}).get('href') %}
+    <img src="{{ player_info.headshot.href }}" alt="{{ player_info.displayName }}" class="player-headshot-lg">
+    {% endif %}
+    <div>
+      <h1>{{ player_info.displayName }}</h1>
+      <p class="player-meta">
+        {{ player_info.position.displayName if player_info.get('position') else '' }}
+        {% if player_info.get('jersey') %} • #{{ player_info.jersey }}{% endif %}
+        {% if player_info.get('displayHeight') %} • {{ player_info.displayHeight }}{% endif %}
+        {% if player_info.get('displayWeight') %} • {{ player_info.displayWeight }}{% endif %}
+      </p>
+      <p class="season-note">
+        Season {{ season }}
+        <a href="?season={{ season - 1 }}">← Prev</a> |
+        <a href="?season={{ season + 1 }}">Next →</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+{% if stat_categories %}
+<section class="stats-section">
+  <h2>Statistics & League Rankings</h2>
+  <div class="stats-grid">
+    {% for cat in stat_categories %}
+    <div class="stat-category">
+      <h3>{{ cat.displayName }}</h3>
+      <div class="stat-list">
+        {% for s in cat.get('stats', []) %}
+        {% if s.get('displayValue') or s.get('rankDisplayValue') %}
+        <div class="stat-row {% if s.get('rankDisplayValue') %}has-rank{% endif %}">
+          <span class="stat-name">{{ s.shortDisplayName or s.displayName }}</span>
+          <span class="stat-value">{{ s.displayValue or '—' }}</span>
+          {% if s.get('rankDisplayValue') %}
+          <span class="stat-rank">({{ s.rankDisplayValue }})</span>
+          {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
+<div class="empty-state">
+  <p>No statistics available for this season. Try <a href="?season={{ season - 1 }}">previous season</a>.</p>
+</div>
+{% endif %}
+
+<p class="back-link"><a href="/{{ league_id }}/teams">← Back to {{ league_name }} Teams</a></p>
+
+{% endblock %}

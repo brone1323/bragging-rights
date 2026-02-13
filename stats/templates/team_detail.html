@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ team.displayName }}{% endblock %}
+{% block content %}
+
+<section class="team-header">
+  <div class="team-header-main">
+    {% if team.logos %}
+    <img src="{{ team.logos[0].href }}" alt="{{ team.displayName }}" class="team-logo-lg">
+    {% endif %}
+    <div>
+      <h1>{{ team.displayName }}</h1>
+      <p class="team-meta">{{ team.abbreviation }} • {{ standing_summary or '—' }}</p>
+      <div class="record-badges">
+        {% for item in record.get('items', []) %}
+        <span class="record-badge">{{ item.description }}: <strong>{{ item.summary }}</strong></span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if stat_categories %}
+<section class="stats-section">
+  <h2>Team Statistics</h2>
+  <div class="stats-grid">
+    {% for cat in stat_categories %}
+    <div class="stat-category">
+      <h3>{{ cat.displayName }}</h3>
+      <div class="stat-list">
+        {% for s in cat.get('stats', [])[:12] %}
+        <div class="stat-row">
+          <span class="stat-name">{{ s.shortDisplayName or s.displayName }}</span>
+          <span class="stat-value">{{ s.displayValue }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="roster-section">
+  <h2>Roster</h2>
+  <p class="season-note">Season {{ season }} • <a href="?season={{ season - 1 }}">Previous</a> | <a href="?season={{ season + 1 }}">Next</a></p>
+  <div class="roster-grid">
+    {% for athlete in athletes %}
+    <a href="/{{ league_id }}/player/{{ athlete.id }}" class="player-card">
+      <img src="{{ athlete.headshot.href }}" alt="{{ athlete.displayName }}" class="player-headshot" onerror="this.style.display='none'">
+      <div class="player-info">
+        <span class="player-name">{{ athlete.displayName }}</span>
+        <span class="player-meta">#{{ athlete.jersey }} • {{ athlete.position.displayName if athlete.position else '' }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<p class="back-link"><a href="/{{ league_id }}/teams">← Back to {{ league_name }} Teams</a></p>
+
+{% endblock %}

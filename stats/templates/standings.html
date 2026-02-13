@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ league_name }} Standings{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>{{ league_name }} Standings</h1>
+</section>
+
+{% if standings %}
+  {% if standings.get('fullViewLink') and not standings.get('children') %}
+  <div class="standings-fallback">
+    <p>Standings data uses a different format. View full standings at ESPN:</p>
+    <a href="{{ standings.fullViewLink.href }}" target="_blank" rel="noopener" class="btn-link">
+      {{ standings.fullViewLink.text }}
+    </a>
+  </div>
+  {% elif standings.get('children') %}
+  <div class="standings-sections">
+    {% for conf in standings.children %}
+    <section class="standings-group">
+      <h2>{{ conf.get('name', 'Conference') }}</h2>
+      {% for div in (conf.get('standings') or [conf]) %}
+      {% set entries = (div.get('entries') or []) if div is mapping else [] %}
+      {% if entries %}
+      <div class="standings-table-wrap">
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>W</th>
+              <th>L</th>
+              <th>PCT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries %}
+            <tr>
+              <td>{{ entry.get('rank', loop.index) }}</td>
+              <td>{{ entry.get('team', {}).get('displayName', entry.get('name', '-')) }}</td>
+              <td>{{ entry.get('wins', entry.get('stats', [{}])[0] if entry.get('stats') else '-') }}</td>
+              <td>{{ entry.get('losses', '-') }}</td>
+              <td>{{ entry.get('winPercent', entry.get('percentage', '-')) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="standings-raw">
+    <p>Standings structure varies by league. Raw data available.</p>
+    {% if standings.get('fullViewLink') %}
+    <a href="{{ standings.fullViewLink.href }}" target="_blank" rel="noopener" class="btn-link">View at ESPN</a>
+    {% endif %}
+  </div>
+  {% endif %}
+{% else %}
+<div class="empty-state">
+  <p>No standings data. Run <code>python main.py --leagues {{ league_id }}</code> to harvest.</p>
+</div>
+{% endif %}
+
+{% endblock %}

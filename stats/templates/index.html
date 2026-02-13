@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <h1>Sports Statistics Viewer</h1>
+  <p class="subtitle">Browse harvested data from NBA, NHL, NFL, and MLB</p>
+</section>
+
+<section class="league-grid">
+  {% for lid, info in leagues.items() %}
+  <a href="/{{ lid }}/teams" class="league-card">
+    <span class="league-badge">{{ info.name }}</span>
+    <div class="league-links">
+      <span>Teams</span>
+      <span>Standings</span>
+      <span>Scoreboard</span>
+      <span>Schedule</span>
+    </div>
+  </a>
+  {% endfor %}
+</section>
+
+{% endblock %}
