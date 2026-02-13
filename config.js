@@ -1,7 +1,8 @@
 /**
  * Site-wide config for Bragging Rights.
- * Edit this file to set the Stats API URL so all visitors get live scores.
- * After deploying the stats server to Render, set your URL here and redeploy.
+ * Edit this file to set URLs and API keys, then redeploy.
  */
 window.BRAG_CONFIG = window.BRAG_CONFIG || {};
 window.BRAG_CONFIG.statsApiUrl = 'https://bragging-rights.onrender.com';
+// Odds API (the-odds-api.com) - set your key so odds load for all visitors
+window.BRAG_CONFIG.oddsApiKey = '';

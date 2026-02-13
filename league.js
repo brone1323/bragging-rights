@@ -11,7 +11,7 @@
   }
 
   function getStatsBase() {
-    var api = localStorage.getItem('brag_stats_api') || '';
+    var api = localStorage.getItem('brag_stats_api') || (window.BRAG_CONFIG && window.BRAG_CONFIG.statsApiUrl) || '';
     return api.replace(/\/$/, '');
   }
 
@@ -150,13 +150,31 @@
 
   function renderScoreboard(leagueId, contentEl) {
     contentEl.innerHTML = '<div class="note">Loading scoreboard...</div>';
-    fetchData(leagueId, 'scoreboard').then(function(data) {
-      var events = (data && data.events) || [];
-      if (!events.length) {
-        contentEl.innerHTML = '<div class="note">No games today. Run python main.py in the stats folder to harvest.</div>';
+    var today = new Date();
+    function dateStr(d) { return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0'); }
+    function tryNextDate(dayOffset, maxDays, cb) {
+      if (dayOffset >= maxDays) { cb(null, null); return; }
+      var d = new Date(today);
+      d.setDate(d.getDate() + dayOffset);
+      var ds = dayOffset === 0 ? null : dateStr(d);
+      var url = getStatsBase() ? getStatsBase() + '/api/' + leagueId + '/scoreboard' + (ds ? '?date=' + ds : '') : './data/' + leagueId + '/' + (ds ? 'scoreboard_' + ds : 'scoreboard') + '.json';
+      fetchJson(url).then(function(payload) {
+        var data = payload && payload.data ? payload.data : payload;
+        var events = (data && data.events) ? data.events : (payload && payload.events) ? payload.events : [];
+        if (events.length) {
+          var label = dayOffset === 0 ? 'Today' : dayOffset === 1 ? 'Tomorrow' : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+          cb(events, label);
+        } else {
+          tryNextDate(dayOffset + 1, maxDays, cb);
+        }
+      }).catch(function() { tryNextDate(dayOffset + 1, maxDays, cb); });
+    }
+    tryNextDate(0, 14, function(events, label) {
+      if (!events || !events.length) {
+        contentEl.innerHTML = '<div class="note">No games in the next 2 weeks for this league.</div>';
         return;
       }
-      var html = '<div class="scoreboard-list">';
+      var html = (label ? '<div class="sb-date-label" style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.5rem;font-weight:bold;">' + esc(label) + '</div>' : '') + '<div class="scoreboard-list">';
       events.forEach(function(ev) {
         var comp = (ev.competitions || [])[0] || {};
         var competitors = (comp.competitors || []).sort(function(a, b) { return (a.homeAway === 'home' ? 1 : 0) - (b.homeAway === 'home' ? 1 : 0); });
@@ -175,8 +193,6 @@
       });
       html += '</div>';
       contentEl.innerHTML = html;
-    }).catch(function() {
-      contentEl.innerHTML = '<div class="note">Failed to load scoreboard.</div>';
     });
   }
 

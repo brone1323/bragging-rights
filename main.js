@@ -171,7 +171,7 @@ window.removeParlaySelection = function(idx) {
 
 // --- Games (API or Simulated) ---
 function getApiKey() {
-  return localStorage.getItem('odds_api_key') || '';
+  return localStorage.getItem('odds_api_key') || (window.BRAG_CONFIG && window.BRAG_CONFIG.oddsApiKey) || '';
 }
 function fetchGamesFromApi() {
   const apiKey = getApiKey();

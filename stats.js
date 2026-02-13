@@ -12,7 +12,7 @@
   var LEAGUES_ORDER = ['nba', 'nfl', 'nhl', 'mlb'];
 
   function getStatsBase() {
-    var api = localStorage.getItem('brag_stats_api') || '';
+    var api = localStorage.getItem('brag_stats_api') || (window.BRAG_CONFIG && window.BRAG_CONFIG.statsApiUrl) || '';
     return api.replace(/\/$/, '');
   }
 
@@ -89,8 +89,45 @@
 
     note.textContent = 'Loading scores...';
     var today = new Date();
-    var todayStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
-    var base = getStatsBase();
+    function dateToStr(d) {
+      return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    }
+    function tryDates(startDate, maxDays, cb) {
+      var d = new Date(startDate);
+      var tryDate = 0;
+      function attempt() {
+        if (tryDate >= maxDays) {
+          cb(null, null);
+          return;
+        }
+        var dateStr = dateToStr(d);
+        var promises = LEAGUES_ORDER.map(function(leagueId) {
+          return fetchScoreboard(leagueId, dateStr).then(function(data) {
+            var events = (data && data.events) ? data.events : [];
+            return { leagueId: leagueId, events: events };
+          });
+        });
+        Promise.all(promises).then(function(results) {
+          var byLeague = {};
+          var total = 0;
+          results.forEach(function(r) {
+            byLeague[r.leagueId] = r.events;
+            total += r.events.length;
+          });
+          if (total > 0) {
+            var label = d.toDateString() === today.toDateString() ? 'Today' :
+              d.toDateString() === new Date(today.getTime() + 86400000).toDateString() ? 'Tomorrow (' + d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ')' :
+              d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+            cb(byLeague, label);
+          } else {
+            tryDate++;
+            d.setDate(d.getDate() + 1);
+            attempt();
+          }
+        });
+      }
+      attempt();
+    }
     var promises = LEAGUES_ORDER.map(function(leagueId) {
       return fetchScoreboard(leagueId, null).then(function(data) {
         var events = (data && data.events) ? data.events : [];
@@ -109,24 +146,11 @@
       } else {
         var tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
-        var tomorrowStr = tomorrow.getFullYear() + String(tomorrow.getMonth() + 1).padStart(2, '0') + String(tomorrow.getDate()).padStart(2, '0');
-        var tomorrowPromises = LEAGUES_ORDER.map(function(leagueId) {
-          return fetchScoreboard(leagueId, tomorrowStr).then(function(data) {
-            var events = (data && data.events) ? data.events : [];
-            return { leagueId: leagueId, events: events };
-          });
-        });
-        Promise.all(tomorrowPromises).then(function(tomorrowResults) {
-          var byLeagueTomorrow = {};
-          var totalTomorrow = 0;
-          tomorrowResults.forEach(function(r) {
-            byLeagueTomorrow[r.leagueId] = r.events;
-            totalTomorrow += r.events.length;
-          });
-          var label = 'Tomorrow (' + tomorrow.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ')';
-          render(byLeagueTomorrow, totalTomorrow > 0 ? label : null);
-          if (totalTomorrow === 0) {
-            el.innerHTML = '<div class="note">No games today or tomorrow. Run the stats harvester or check Stats API URL in Admin.</div>';
+        tryDates(tomorrow, 14, function(byLeagueNext, label) {
+          if (byLeagueNext && label) {
+            render(byLeagueNext, 'Next games: ' + label);
+          } else {
+            el.innerHTML = '<div class="note">No games in the next 2 weeks. Check back later or run the stats harvester.</div>';
           }
         });
       }

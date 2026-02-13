@@ -36,7 +36,7 @@ def run_harvest(
     from storage import StatsStorage
 
     leagues = leagues or list(LEAGUES.keys())
-    types = types or ["teams", "standings", "scoreboard"]
+    types = types or ["teams", "standings", "scoreboard", "schedule"]
     output = output or DATA_DIR
     if quiet:
         logging.getLogger().setLevel(logging.WARNING)
