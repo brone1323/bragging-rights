@@ -97,17 +97,10 @@ class ESPNHarvester:
         season: Optional[int] = None,
         limit: int = 100,
     ) -> Optional[dict]:
-        """Harvest schedule for a league. Uses scoreboard-style calendar data."""
+        """Harvest schedule for a league. Uses scoreboard endpoint - ESPN returns 500 with season param, so we omit it."""
         path = self._get_league_path(league_id)
-        url = f"{self.base_url}/{path}/scoreboard"
-        params = []
-        if season:
-            params.append(f"seasontype=2")  # Regular season
-            params.append(f"season={season}")
-        params.append(f"limit={limit}")
-        if params:
-            url += "?" + "&".join(params)
-        logger.info("Harvesting schedule for %s (season=%s)", league_id.upper(), season)
+        url = f"{self.base_url}/{path}/scoreboard?limit={limit}"
+        logger.info("Harvesting schedule for %s", league_id.upper())
         data = self._fetch(url)
         time.sleep(REQUEST_DELAY)
         return data
