@@ -239,32 +239,40 @@
         html += '<h3 style="color:#3fa7ff;font-size:1rem;margin-top:1rem;">Season Stats</h3>';
         var abbrA = teamA.abbreviation || 'A';
         var abbrB = teamB.abbreviation || 'B';
+        var colorA = '#3fa7ff';  /* blue for team A */
+        var colorB = '#e6b800';  /* gold for team B */
         data.comparison.forEach(function(row) {
           var pctA = row.pct_a != null ? row.pct_a : 50;
           var pctB = row.pct_b != null ? row.pct_b : 50;
           var rankA = row.rank_a != null ? row.rank_a : 1;
           var rankB = row.rank_b != null ? row.rank_b : 1;
-          html += '<div style="margin:0.5rem 0;"><div style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.2rem;">' + row.label + '</div>';
+          var lrA = row.leagueRank_a || '';
+          var lrB = row.leagueRank_b || '';
+          var valA = row.a + (lrA ? ' (' + lrA + ')' : '');
+          var valB = (lrB ? '(' + lrB + ') ' : '') + row.b;
+          html += '<div style="margin:0.5rem 0;"><div style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.2rem;text-align:center;">' + row.label + '</div>';
           html += '<div style="display:flex;align-items:center;gap:0.5rem;">';
-          html += '<span style="min-width:3rem;display:flex;align-items:center;gap:0.25rem;">' + (rankA === 1 ? '<span style="color:#3fa7ff;font-weight:bold;">#1</span>' : '<span style="color:#6b7280;font-size:0.85rem;">#2</span>') + ' ' + row.a + '</span>';
+          html += '<span style="min-width:4rem;font-size:0.9rem;color:' + (rankA === 1 ? colorA : '#6b7280') + ';">' + valA + '</span>';
           html += '<div style="flex:1;height:10px;background:#18213a;border-radius:4px;overflow:hidden;display:flex;">';
-          html += '<div style="width:' + pctA + '%;background:#3fa7ff;min-width:2px;"></div>';
-          html += '<div style="width:' + pctB + '%;background:#1e2a4a;min-width:2px;"></div>';
+          html += '<div style="width:' + pctA + '%;background:' + colorA + ';min-width:2px;"></div>';
+          html += '<div style="width:' + pctB + '%;background:' + colorB + ';min-width:2px;"></div>';
           html += '</div>';
-          html += '<span style="min-width:3rem;text-align:right;display:flex;align-items:center;gap:0.25rem;justify-content:flex-end;">' + row.b + ' ' + (rankB === 1 ? '<span style="color:#3fa7ff;font-weight:bold;">#1</span>' : '<span style="color:#6b7280;font-size:0.85rem;">#2</span>') + '</span>';
+          html += '<span style="min-width:4rem;text-align:right;font-size:0.9rem;color:' + (rankB === 1 ? colorB : '#6b7280') + ';">' + valB + '</span>';
           html += '</div></div>';
         });
       }
       if (data.game_comparison && data.game_comparison.length) {
         html += '<h3 style="color:#3fa7ff;font-size:1rem;margin-top:1.2rem;">Game Stats</h3>';
+        var gcA = '#3fa7ff';
+        var gcB = '#e6b800';
         data.game_comparison.forEach(function(row) {
-          html += '<div style="margin:0.5rem 0;"><div style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.2rem;">' + row.label + '</div>';
+          html += '<div style="margin:0.5rem 0;"><div style="font-size:0.9rem;color:#b8c6e0;margin-bottom:0.2rem;text-align:center;">' + row.label + '</div>';
           html += '<div style="display:flex;align-items:center;gap:0.5rem;">';
-          html += '<span style="min-width:3rem;">' + row.a + '</span>';
+          html += '<span style="min-width:3rem;color:' + gcA + ';">' + row.a + '</span>';
           html += '<div style="flex:1;height:8px;background:#18213a;border-radius:4px;overflow:hidden;display:flex;">';
-          html += '<div style="width:' + row.pct_a + '%;background:#3fa7ff;"></div>';
-          html += '<div style="width:' + row.pct_b + '%;background:#1e2a4a;"></div>';
-          html += '</div><span style="min-width:3rem;text-align:right">' + row.b + '</span></div></div>';
+          html += '<div style="width:' + row.pct_a + '%;background:' + gcA + ';"></div>';
+          html += '<div style="width:' + row.pct_b + '%;background:' + gcB + ';"></div>';
+          html += '</div><span style="min-width:3rem;text-align:right;color:' + gcB + ';">' + row.b + '</span></div></div>';
         });
       }
       if (!data.comparison || !data.comparison.length) {

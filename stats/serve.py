@@ -217,9 +217,9 @@ def api_matchup(league_id: str, event_id: str):
         teams_data.append({"team": {}, "stat_categories": [], "standing_summary": ""})
     team_a, team_b = teams_data[0], teams_data[1]
     comparison = []
-    stats_a = {s["name"]: {"display": s.get("displayValue", ""), "label": s.get("shortDisplayName") or s.get("displayName", s["name"])}
+    stats_a = {s["name"]: {"display": s.get("displayValue", ""), "label": s.get("shortDisplayName") or s.get("displayName", s["name"]), "leagueRank": s.get("rankDisplayValue", "")}
                for cat in team_a.get("stat_categories", []) for s in cat.get("stats", [])}
-    stats_b = {s["name"]: {"display": s.get("displayValue", ""), "label": s.get("shortDisplayName") or s.get("displayName", s["name"])}
+    stats_b = {s["name"]: {"display": s.get("displayValue", ""), "label": s.get("shortDisplayName") or s.get("displayName", s["name"]), "leagueRank": s.get("rankDisplayValue", "")}
                for cat in team_b.get("stat_categories", []) for s in cat.get("stats", [])}
     LOWER_IS_BETTER = {"goalsagainst", "goalsagainstaverage", "losses", "overtimelosses", "faceoffslost", "penaltyminutes"}
     def parse_num(v):
@@ -254,7 +254,9 @@ def api_matchup(league_id: str, event_id: str):
         else:
             rank_a = 1 if na_raw > nb_raw else (2 if na_raw < nb_raw else 1)
             rank_b = 1 if nb_raw > na_raw else (2 if nb_raw < na_raw else 1)
-        comparison.append({"label": stats_a[name]["label"], "a": va, "b": vb, "pct_a": round(pct_a, 1), "pct_b": round(pct_b, 1), "rank_a": rank_a, "rank_b": rank_b})
+        league_rank_a = stats_a[name].get("leagueRank", "")
+        league_rank_b = stats_b[name].get("leagueRank", "")
+        comparison.append({"label": stats_a[name]["label"], "a": va, "b": vb, "pct_a": round(pct_a, 1), "pct_b": round(pct_b, 1), "rank_a": rank_a, "rank_b": rank_b, "leagueRank_a": league_rank_a, "leagueRank_b": league_rank_b})
     game_comparison = []
     stat_map = {
         "fieldGoalsMade-fieldGoalsAttempted": ("FG", "fg"), "fieldGoalPct": ("FG %", "pct"),
