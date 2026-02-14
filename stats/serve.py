@@ -171,6 +171,19 @@ def api_teams(league_id: str):
     return jsonify(team_list)
 
 
+@app.route("/api/<league_id>/team/<team_id>")
+def api_team_detail(league_id: str, team_id: str):
+    """Return team detail with roster (JSON) for league page."""
+    if league_id not in LEAGUES:
+        abort(404)
+    season = request.args.get("season", type=int) or datetime.now().year
+    team_data = harvester.fetch_team_detail(league_id, team_id, season)
+    if not team_data or "team" not in team_data:
+        return jsonify({"error": "Team not found"}), 404
+    team = team_data["team"]
+    return jsonify({"team": team, "athletes": team.get("athletes", [])})
+
+
 @app.route("/api/<league_id>/standings")
 def api_standings(league_id: str):
     if league_id not in LEAGUES:

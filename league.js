@@ -43,7 +43,9 @@
     contentEl.innerHTML = '<div class="note">Loading teams...</div>';
     fetchData(leagueId, 'teams').then(function(data) {
       var teams = [];
-      if (data && data.sports) {
+      if (Array.isArray(data)) {
+        data.forEach(function(t) { if (t && t.id) teams.push(t); });
+      } else if (data && data.sports) {
         data.sports.forEach(function(sport) {
           (sport.leagues || []).forEach(function(league) {
             (league.teams || []).forEach(function(item) {
@@ -72,6 +74,65 @@
       contentEl.innerHTML = html;
     }).catch(function() {
       contentEl.innerHTML = '<div class="note">Failed to load. Set Stats API URL in Admin and run python serve.py in the stats folder.</div>';
+    });
+  }
+
+  function renderPlayers(leagueId, contentEl) {
+    contentEl.innerHTML = '<div class="note">Loading teams and rosters...</div>';
+    fetchData(leagueId, 'teams').then(function(data) {
+      var teams = [];
+      if (Array.isArray(data)) {
+        data.forEach(function(t) { if (t && t.id) teams.push(t); });
+      } else if (data && data.sports) {
+        data.sports.forEach(function(sport) {
+          (sport.leagues || []).forEach(function(league) {
+            (league.teams || []).forEach(function(item) {
+              var t = item.team || item;
+              if (t.id) teams.push(t);
+            });
+          });
+        });
+      }
+      if (!teams.length) {
+        contentEl.innerHTML = '<div class="note">No teams found. Run the stats harvester first.</div>';
+        return;
+      }
+      var base = getStatsBase();
+      if (!base) {
+        contentEl.innerHTML = '<div class="note">Stats API URL required for rosters. Set it in Admin.</div>';
+        return;
+      }
+      var promises = teams.map(function(team) {
+        return fetchJson(base + '/api/' + leagueId + '/team/' + team.id).then(function(res) { return { team: team, data: res }; });
+      });
+      Promise.all(promises).then(function(results) {
+        var html = '';
+        results.forEach(function(r) {
+          var team = r.team;
+          var athletes = (r.data && r.data.athletes) || [];
+          if (!athletes.length) return;
+          var teamName = team.displayName || team.name || 'Unknown';
+          html += '<div class="players-section" style="margin-bottom:1.5rem;">';
+          html += '<h3 style="color:#3fa7ff;font-size:1rem;margin:0 0 0.5rem 0;">' + esc(teamName) + '</h3>';
+          html += '<div class="players-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;">';
+          athletes.forEach(function(a) {
+            var name = a.displayName || a.name || 'Player';
+            var pos = (a.position && a.position.displayName) ? a.position.displayName : (a.position || '');
+            var jersey = a.jersey ? '#' + a.jersey : '';
+            var href = base + '/' + leagueId + '/player/' + a.id;
+            html += '<a href="' + esc(href) + '" class="player-card-league" target="_blank" rel="noopener" style="display:block;padding:0.5rem;background:#1a2342;border-radius:6px;color:#e0e6ed;text-decoration:none;font-size:0.85rem;">';
+            html += '<span style="font-weight:600;">' + esc(name) + '</span>';
+            if (jersey || pos) html += '<span style="display:block;font-size:0.75rem;color:#8b9ab8;">' + esc(jersey + (jersey && pos ? ' ' : '') + pos) + '</span>';
+            html += '</a>';
+          });
+          html += '</div></div>';
+        });
+        contentEl.innerHTML = html || '<div class="note">No roster data available yet.</div>';
+      }).catch(function() {
+        contentEl.innerHTML = '<div class="note">Failed to load rosters. The stats server may be starting up.</div>';
+      });
+    }).catch(function() {
+      contentEl.innerHTML = '<div class="note">Failed to load teams.</div>';
     });
   }
 
@@ -208,6 +269,7 @@
         t.classList.toggle('active', t.getAttribute('data-tab') === tab);
       });
       if (tab === 'teams') renderTeams(leagueId, contentEl);
+      else if (tab === 'players') renderPlayers(leagueId, contentEl);
       else if (tab === 'standings') renderStandings(leagueId, contentEl);
       else if (tab === 'schedule') renderSchedule(leagueId, contentEl);
       else if (tab === 'scoreboard') renderScoreboard(leagueId, contentEl);
